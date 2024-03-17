@@ -1,0 +1,55 @@
+package pages
+
+import (
+	"github.com/zbsss/whatsbetter/ui/components"
+	"github.com/zbsss/whatsbetter/internal/models"
+)
+
+type IndexProps struct {
+	Title     string
+	Items     []models.Item
+	FormData  components.FormData
+	HTMXDebug bool
+}
+
+script htmxSetup(debug bool) {
+  document.addEventListener("DOMContentLoaded", (event) => {
+      document.body.addEventListener("htmx:beforeSwap", (evt) => {
+        if (evt.detail.xhr.status === 409) {
+          evt.detail.shouldSwap = true
+          evt.detail.isError = false
+        }
+      })
+  })
+
+  if (debug) {
+    htmx.logAll()
+  }
+}
+
+templ Index(props IndexProps) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<title>{ props.Title }</title>
+			<!-- Link to the CSS stylesheet and favicon -->
+			<link rel="stylesheet" href="/static/css/index.css"/>
+			<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon"/>
+			<!-- Also link to some fonts hosted by Google -->
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700"/>
+			<script src="https://unpkg.com/htmx.org@1.9.11"></script>
+		</head>
+		<body>
+			<header>
+				<h1><a href="/">{ props.Title }</a></h1>
+			</header>
+			<main>
+				@components.Form(props.FormData)
+				@components.ItemList(props.Items)
+				// @htmxSetup(props.HTMXDebug)
+			</main>
+			<footer>Powered by <a href="https://golang.org/">Go</a></footer>
+		</body>
+	</html>
+}

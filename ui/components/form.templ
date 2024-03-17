@@ -1,0 +1,41 @@
+package components
+
+import (
+	"github.com/zbsss/whatsbetter/internal/validator"
+)
+
+type FormData struct {
+	CSRFToken  string
+	Name       string
+	Rating     string
+	NumReviews string
+	validator.Validator
+}
+
+templ Form(fd FormData) {
+	<form hx-post="/restaurants" hx-swap="outerHTML">
+		<input type="hidden" name="csrf_token" value={ fd.CSRFToken }/>
+		<div>
+			<label>Name:</label>
+			if err, ok := fd.FieldErrors["Name"]; ok {
+				<label class="error">{ err }</label>
+			}
+			<input type="text" name="Name" value={ fd.Name }/>
+		</div>
+		<div>
+			<label>Rating:</label>
+			if err, ok := fd.FieldErrors["Rating"]; ok {
+				<label class="error">{ err }</label>
+			}
+			<input type="text" name="Rating" value={ fd.Rating }/>
+		</div>
+		<div>
+			<label>Number of reviews:</label>
+			if err, ok := fd.FieldErrors["NumReviews"]; ok {
+				<label class="error">{ err }</label>
+			}
+			<input type="text" name="NumReviews" value={ fd.NumReviews }/>
+		</div>
+		<button type="submit">Add Restaurant</button>
+	</form>
+}

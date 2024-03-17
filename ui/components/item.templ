@@ -1,0 +1,29 @@
+package components
+
+import (
+	"fmt"
+	"github.com/zbsss/whatsbetter/internal/models"
+)
+
+templ ItemList(items []models.Item) {
+	<div id="restaurants" style="display: flex; flex-direction: column; gap: 20px;">
+		for _, item := range items {
+			@ItemCard(item)
+		}
+	</div>
+}
+
+templ ItemListOOB(item models.Item) {
+	<div id="restaurants" hx-swap-oob="afterbegin">
+		@ItemCard(item)
+	</div>
+}
+
+templ ItemCard(item models.Item) {
+	<div id={ fmt.Sprintf("restaurant-%s", item.Name) } class="contact" style="display: flex; gap: 5px; flex-direction: column;">
+		<h3>{ item.Name }</h3>
+		<p>Rating: { fmt.Sprintf("%.1f", item.Rating) }</p>
+		<p>Number of Reviews: { fmt.Sprintf("%d", item.NumOfReviews) }</p>
+		<p>Calculated Rating: { fmt.Sprintf("%.4f", item.CalculatedRating) }</p>
+	</div>
+}
